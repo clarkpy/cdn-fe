@@ -16,7 +16,7 @@ export default function SplashPage() {
 
     return (
         <div className="min-h-screen bg-black text-white flex flex-col relative overflow-hidden">
-            {showSnowfall && <Snowfall snowflakeCount={500000} />}
+            {showSnowfall && <Snowfall snowflakeCount={200} />}
             <main className="flex-grow flex items-center justify-center">
                 <div className="flex-grow flex items-center justify-center">
                     <div className="container mx-auto px-4 py-16 flex flex-col items-center justify-center">
