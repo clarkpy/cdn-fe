@@ -5,6 +5,7 @@ import {motion} from "framer-motion";
 import {Snowfall} from "react-snowfall";
 import {Button} from "@/components/ui/button";
 import Link from "next/link";
+import {Footer} from "@/components/footer";
 
 export default function SplashPage() {
     const [showSnowfall, setShowSnowfall] = useState(false);
@@ -71,6 +72,7 @@ export default function SplashPage() {
                     </div>
                 </div>
             </main>
+            <Footer />
         </div>
     )
 }
