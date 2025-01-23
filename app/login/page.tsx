@@ -63,7 +63,17 @@ export default function LoginPage() {
                                 if (data.success) {
                                     Cookie.set('username', username.toString())
                                     Cookie.set('apiKey', data.apiKey)
-                                    window.location.href = '/dashboard'
+                                    toast({
+                                        title: "Welcome Back",
+                                        description: data.success,
+                                    })
+                                    await new Promise(resolve => setTimeout(resolve, 1000));
+                                    window.location.href = "/dashboard"
+                                } else {
+                                    toast({
+                                        title: "Authentication failed",
+                                        description: data.error,
+                                    })
                                 }
 
                             }}
