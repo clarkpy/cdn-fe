@@ -6,6 +6,9 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Card, CardContent, CardHeader } from "@/components/ui/card"
+import { toast } from "@/hooks/use-toast"
+import { Toaster } from "@/components/ui/toaster"
+import Cookie from 'js-cookie'
 
 export default function RegPage() {
     return (
@@ -30,11 +33,61 @@ export default function RegPage() {
                         <h1 className="text-2xl font-semibold text-white">Make an account</h1>
                     </CardHeader>
                     <CardContent className="space-y-6 px-6">
+                    <form
+                        onSubmit={async (event) => {
+                            event.preventDefault()
+                            const formData = new FormData(event.currentTarget)
+                            const username = formData.get("username")
+                            const password = formData.get("password")
+                            const invitecode = formData.get("invitecode")
+
+                            if (!username || !password || !invitecode) {
+                                toast({
+                                    title: "Missing Fields",
+                                    description: `Please fill all the fields`,
+                                })
+                                return
+                            }
+
+                            const response = await fetch("https://dk1.snowy.codes/api/v1/signup", {
+                                method: "POST",
+                                headers: {
+                                    "Content-Type": "application/json",
+                                },
+                                body: JSON.stringify({
+                                    username,
+                                    password,
+                                    inviteCode: invitecode,
+                                }),
+                            })
+                            const data = await response.json()
+
+                            if (response.ok) {
+                                
+                                toast({
+                                    title: "Account Created",
+                                    description: `Welcome to snowycdn ${username}!`,
+                                })
+
+                                Cookie.set('apiKey', data.apiKey, { expires: 7})
+                                Cookie.set('username', username.toString(), { expires: 7})
+                                window.location.href = '/dashboard'
+
+                            } else {
+                                toast({
+                                    title: "Error Occured",
+                                    description: `${data.error}`,
+                                })
+                            }
+                        }}
+                    >
+
                         <div className="space-y-4">
                             <div className="space-y-2">
                                 <Label htmlFor="username" className="text-white text-lg">Username</Label>
                                 <Input
                                     id="username"
+                                    name="username"
                                     placeholder="Eg: snowy"
                                     className="bg-[#1A1A1A] border-[#333] text-white text-lg py-6"
                                 />
@@ -43,6 +96,7 @@ export default function RegPage() {
                                 <Label htmlFor="password" className="text-white text-lg">Password</Label>
                                 <Input
                                     id="password"
+                                    name="password"
                                     type="password"
                                     placeholder="Eg: H1GhSeAs2024!!"
                                     className="bg-[#1A1A1A] border-[#333] text-white text-lg py-6"
@@ -52,17 +106,19 @@ export default function RegPage() {
                                 <Label htmlFor="invitecode" className="text-white text-lg">Invite Code</Label>
                                 <Input
                                     id="invitecode"
+                                    name="invitecode"
                                     placeholder="Eg: XXXX-XXXX"
                                     className="bg-[#1A1A1A] border-[#333] text-white text-lg py-6"
                                 />
                             </div>
                         </div>
-                        <Button
-                            className="w-full bg-white text-black hover:bg-[#222] hover:text-white text-lg py-6"
-                            asChild
-                        >
-                            <Link href="/dashboard">Register</Link>
-                        </Button>
+                            <Button
+                                className="w-full bg-white text-black hover:bg-[#222] hover:text-white text-lg py-6 mt-6"
+                                type="submit"
+                            > 
+                                Register
+                            </Button>
+                        </form>
                         <div className="text-center">
                             <Link
                                 href="/login"
@@ -74,6 +130,7 @@ export default function RegPage() {
                     </CardContent>
                 </Card>
             </motion.div>
+            <Toaster />
         </div>
     )
 }
