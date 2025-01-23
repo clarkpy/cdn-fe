@@ -6,6 +6,9 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Card, CardContent, CardHeader } from "@/components/ui/card"
+import { toast } from "@/hooks/use-toast"
+import Cookie from 'js-cookie'
+import { Toaster } from "@/components/ui/toaster"
 
 export default function LoginPage() {
     return (
@@ -30,42 +33,81 @@ export default function LoginPage() {
                         <h1 className="text-2xl font-semibold text-white">Welcome back</h1>
                     </CardHeader>
                     <CardContent className="space-y-6 px-6">
-                        <div className="space-y-4">
-                            <div className="space-y-2">
-                                <Label htmlFor="username" className="text-white text-lg">Username</Label>
-                                <Input
-                                    id="username"
-                                    placeholder="Eg: snowy"
-                                    className="bg-[#1A1A1A] border-[#333] text-white text-lg py-6"
-                                />
-                            </div>
-                            <div className="space-y-2">
-                                <Label htmlFor="password" className="text-white text-lg">Password</Label>
-                                <Input
-                                    id="password"
-                                    type="password"
-                                    placeholder="Eg: H1GhSeAs2024!!"
-                                    className="bg-[#1A1A1A] border-[#333] text-white text-lg py-6"
-                                />
-                            </div>
-                        </div>
-                        <Button
-                            className="w-full bg-white text-black hover:bg-[#222] hover:text-white text-lg py-6"
-                            asChild
+                        <form
+                        
+                        onSubmit={async (event) => {
+                                event.preventDefault()
+                                const formData = new FormData(event.currentTarget)
+                                const username = formData.get("username")
+                                const password = formData.get("password")
+
+                                if (!username || !password) {
+                                    toast({
+                                        title: "Missing Fields",
+                                        description: `Please fill all the fields`,
+                                    })
+                                    return
+                                }
+
+                                const response = await fetch('https://dk1.snowy.codes/api/v1/login', {
+                                    method: 'POST',
+                                    headers: {
+                                        'Content-Type': 'application/json',
+                                    },
+                                    body: JSON.stringify({
+                                        username,
+                                        password
+                                    }),
+                                })
+                                const data = await response.json()
+                                if (data.success) {
+                                    Cookie.set('username', username.toString())
+                                    Cookie.set('apiKey', data.apiKey)
+                                    window.location.href = '/dashboard'
+                                }
+
+                            }}
                         >
-                            <Link href="/dashboard">Login</Link>
-                        </Button>
-                        <div className="text-center">
-                            <Link
-                                href="/register"
-                                className="text-white text-lg"
+                            <div className="space-y-4">
+                                <div className="space-y-2">
+                                    <Label htmlFor="username" className="text-white text-lg">Username</Label>
+                                    <Input
+                                        id="username"
+                                        name="username"
+                                        placeholder="Eg: snowy"
+                                        className="bg-[#1A1A1A] border-[#333] text-white text-lg py-6"
+                                    />
+                                </div>
+                                <div className="space-y-2">
+                                    <Label htmlFor="password" className="text-white text-lg">Password</Label>
+                                    <Input
+                                        id="password"
+                                        name="password"
+                                        type="password"
+                                        placeholder="Eg: H1GhSeAs2024!!"
+                                        className="bg-[#1A1A1A] border-[#333] text-white text-lg py-6"
+                                    />
+                                </div>
+                            </div>
+                            <Button
+                                className="w-full bg-white text-black hover:bg-[#222] hover:text-white text-lg py-6 mt-6 mb-2"
+                                type="submit"
                             >
-                                Don&#39;t have an account? Register
-                            </Link>
-                        </div>
+                                Login
+                            </Button>
+                            <div className="text-center">
+                                <Link
+                                    href="/register"
+                                    className="text-white text-lg"
+                                >
+                                    Don&#39;t have an account? Register
+                                </Link>
+                            </div>
+                        </form>
                     </CardContent>
                 </Card>
             </motion.div>
+            <Toaster />
         </div>
     )
 }
