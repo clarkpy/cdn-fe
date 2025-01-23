@@ -50,7 +50,7 @@ export default function LoginPage() {
                             </div>
                         </div>
                         <Button
-                            className="w-full bg-primary hover:bg-primary/90 text-primary-foreground text-lg py-6"
+                            className="w-full bg-white text-black hover:bg-[#222] hover:text-white text-lg py-6"
                             asChild
                         >
                             <Link href="/dashboard">Login</Link>
