@@ -43,7 +43,7 @@ export default function LoginPage() {
 
                                 if (!username || !password) {
                                     toast({
-                                        title: "Missing Fields",
+                                        title: "Request failed",
                                         description: `Please fill all the fields`,
                                     })
                                     return
@@ -64,7 +64,7 @@ export default function LoginPage() {
                                     Cookie.set('username', username.toString())
                                     Cookie.set('apiKey', data.apiKey)
                                     toast({
-                                        title: "Welcome Back",
+                                        title: "Authentication successful",
                                         description: data.success,
                                     })
                                     await new Promise(resolve => setTimeout(resolve, 1000));
