@@ -43,12 +43,41 @@ export default function Dash() {
         fetchImages();
     }, [])
 
-    const handleDel = (name:string) => {
+    const handleDel = async (name:string) => {
         setImages(images.filter((img) => img.name !== name))
-        // api call to delete image from cdn soon
+        const response = await fetch(`https://dk1.snowy.codes/api/v1/delete`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                username: Cookie.get('username'),
+                apiKey: Cookie.get('apiKey'),
+                fileName: name
+            }),
+        })
+        const data = await response.json()
         toast({
-            title: "Image deleted",
-            description: "The image has been deleted from the file server",
+            title: "Request Complete",
+            description: data.message,
+        })
+    }
+
+    const handleDeleteAll = async () => {
+        const response = await fetch(`https://dk1.snowy.codes/api/v1/deleteall`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                username: Cookie.get('username'),
+                apiKey: Cookie.get('apiKey'),
+            }),
+        })
+        const data = await response.json()
+        toast({
+            title: "Request Complete",
+            description: data.message,
         })
     }
 
@@ -85,32 +114,57 @@ export default function Dash() {
                 </div>
             </header>
             <main className="container mx-auto sm:p-8 p-4">
-                <h1 className="text-2xl font-bold mb-6 flex items-center justify-between">Your Files <Button variant={"outline"} size={"sm"} className={"bg-white text-black hover:bg-[#222] hover:text-white"}
-                onClick={() => { 
-                    fetch('https://dk1.snowy.codes/api/v1/sxcu-config', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                        },
-                        body: JSON.stringify({
-                            username: Cookie.get('username'),
-                            apiKey: Cookie.get('apiKey'),
-                        }),
-                    })
-                    .then(response => response.blob())
-                    .then(blob => {
-                        const url = window.URL.createObjectURL(blob);
-                        const a = document.createElement('a');
-                        a.href = url;
-                        a.download = 'config.sxcu';
-                        document.body.appendChild(a);
-                        a.click();
-                        a.remove();
-                        window.URL.revokeObjectURL(url);
-                    })
-                    .catch(error => console.error('exception caught:', error));
-                }}
-                >Setup Config</Button></h1>
+                <h1 className="text-2xl font-bold mb-6 flex items-center justify-between">
+                    Your Files
+                    <div className="flex space-x-2">
+                        <Button variant={"outline"} size={"sm"} className={"bg-white text-black hover:bg-[#222] hover:text-white"}
+                        onClick={() => { 
+                            fetch('https://dk1.snowy.codes/api/v1/sxcu-config', {
+                                method: 'POST',
+                                headers: {
+                                    'Content-Type': 'application/json',
+                                },
+                                body: JSON.stringify({
+                                    username: Cookie.get('username'),
+                                    apiKey: Cookie.get('apiKey'),
+                                }),
+                            })
+                            .then(response => response.blob())
+                            .then(blob => {
+                                const url = window.URL.createObjectURL(blob);
+                                const a = document.createElement('a');
+                                a.href = url;
+                                a.download = 'config.sxcu';
+                                document.body.appendChild(a);
+                                a.click();
+                                a.remove();
+                                window.URL.revokeObjectURL(url);
+                            })
+                            .catch(error => console.error('exception caught:', error));
+                        }}
+                        >Setup Config</Button> 
+                        <AlertDialog>
+                          <AlertDialogTrigger asChild>
+                          <Button variant="destructive" size="sm" className="flex-1">
+                                Delete All
+                          </Button>
+                          </AlertDialogTrigger>
+                          <AlertDialogContent>
+                            <AlertDialogHeader>
+                              <AlertDialogTitle>Are you 1000% certain?</AlertDialogTitle>
+                              <AlertDialogDescription>
+                                There is ZERO way to undo this.
+                                You will lose ALL your files.
+                              </AlertDialogDescription>
+                            </AlertDialogHeader>
+                            <AlertDialogFooter>
+                              <AlertDialogCancel>Cancel</AlertDialogCancel>
+                              <AlertDialogAction onClick={() => handleDeleteAll()}>Confirm</AlertDialogAction>
+                            </AlertDialogFooter>
+                          </AlertDialogContent>
+                        </AlertDialog>
+                    </div>
+                </h1>
                 
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                     {images.map((image, index) => (
@@ -181,10 +235,10 @@ export default function Dash() {
                                       </AlertDialogTrigger>
                                       <AlertDialogContent>
                                         <AlertDialogHeader>
-                                          <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+                                          <AlertDialogTitle>Are you 100% sure?</AlertDialogTitle>
                                           <AlertDialogDescription>
-                                            This action cannot be undone and will
-                                            permanently delete this image from the server.
+                                            You cannot undo this action.
+                                            This will permanently delete this image from the server.
                                           </AlertDialogDescription>
                                         </AlertDialogHeader>
                                         <AlertDialogFooter>
