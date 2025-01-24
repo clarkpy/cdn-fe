@@ -7,7 +7,6 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Card, CardContent, CardHeader } from "@/components/ui/card"
 import { toast } from "@/hooks/use-toast"
-import { Toaster } from "@/components/ui/toaster"
 import Cookie from 'js-cookie'
 
 export default function RegPage() {
@@ -130,7 +129,6 @@ export default function RegPage() {
                     </CardContent>
                 </Card>
             </motion.div>
-            <Toaster />
         </div>
     )
 }

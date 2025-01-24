@@ -10,7 +10,6 @@ import {Button} from "@/components/ui/button";
 import Link from "next/link";
 import {Card, CardContent, CardFooter} from "@/components/ui/card";
 import {Input} from "@/components/ui/input";
-import {Toaster} from "@/components/ui/toaster";
 import {Label} from "@/components/ui/label";
 import Cookie from 'js-cookie';
 
@@ -177,9 +176,8 @@ export default function Dash() {
                                     <AlertDialog>
                                       <AlertDialogTrigger asChild>
                                       <Button variant="destructive" size="sm" className="flex-1">
-                                            
                                             Delete
-                                            </Button>
+                                      </Button>
                                       </AlertDialogTrigger>
                                       <AlertDialogContent>
                                         <AlertDialogHeader>
@@ -210,7 +208,6 @@ export default function Dash() {
                     </Button>
                 </motion.div>
             </main>
-            <Toaster />
         </div>
     )
 }
