@@ -86,7 +86,33 @@ export default function Dash() {
                 </div>
             </header>
             <main className="container mx-auto sm:p-8 p-4">
-                <h1 className="text-2xl font-bold mb-6">Your Files</h1>
+                <h1 className="text-2xl font-bold mb-6 flex items-center justify-between">Your Files <Button variant={"outline"} size={"sm"} className={"bg-white text-black hover:bg-[#222] hover:text-white"}
+                onClick={() => { 
+                    fetch('https://dk1.snowy.codes/api/v1/sxcu-config', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({
+                            username: Cookie.get('username'),
+                            apiKey: Cookie.get('apiKey'),
+                        }),
+                    })
+                    .then(response => response.blob())
+                    .then(blob => {
+                        const url = window.URL.createObjectURL(blob);
+                        const a = document.createElement('a');
+                        a.href = url;
+                        a.download = 'config.sxcu';
+                        document.body.appendChild(a);
+                        a.click();
+                        a.remove();
+                        window.URL.revokeObjectURL(url);
+                    })
+                    .catch(error => console.error('exception caught:', error));
+                }}
+                >Setup Config</Button></h1>
+                
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                     {images.map((image, index) => (
                         <Card key={index} className="overflow-hidden bg-[#111] border-[#222]">
