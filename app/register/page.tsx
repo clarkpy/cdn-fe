@@ -43,7 +43,7 @@ export default function RegPage() {
 
                             if (!username || !password || !invitecode) {
                                 toast({
-                                    title: "Missing Fields",
+                                    title: "Request failed",
                                     description: `Please fill all the fields`,
                                 })
                                 return
