@@ -128,7 +128,7 @@ export default function Dash() {
                             </CardContent>
                             <CardFooter className="flex flex-col items-start gap-2 p-4">
                                 <div className="flex justify-between items-center w-full">
-                                    <h3 className="font-semibold text-white">{image.name}</h3>
+                                    <h3 className="font-semibold text-white"><Link href={`https://cdn.snowy.codes/${Cookie.get('username')}/${image.name}`}>{image.name}</Link></h3>
                                     <span className="text-sm text-gray-500">{image.size}</span>
                                 </div>
                                 <div className="flex gap-2 w-full">
