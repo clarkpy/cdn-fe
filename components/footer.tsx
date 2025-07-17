@@ -7,7 +7,7 @@ export function Footer() {
                 <p>
                     Made with <span className="text-primary">❤️</span> by {" "}
                     <span className="relative">
-                        <Link href="https://github.com/snowypy">Cigan</Link>
+                        <Link href="https://github.com/clarkpy">Cigan</Link>
                     </span>
                 </p>
             </div>
